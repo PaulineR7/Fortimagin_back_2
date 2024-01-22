@@ -1,9 +1,9 @@
 const { UniqueConstraintError, ValidationError, QueryTypes } = require('sequelize')
-const { BattlePass, User, sequelize } = require('../db/sequelizeSetup')
+const { BattlePass, User, sequelize, Comment } = require('../db/sequelizeSetup')
 
 
 const findAllBattlePass= (req, res) => {
-    BattlePass.findAll()
+    BattlePass.findAll({include: [User]})
         .then((results) => {
             res.json(results)
             console.log(results)
@@ -14,7 +14,7 @@ const findAllBattlePass= (req, res) => {
 }
 
 const findAllBattlePassByUser = (req, res) => {
-    
+    console.log("ici");
     User.findOne({ where: {pseudo : req.params.pseudo}})
         .then((results) => {
             if (!results) {
@@ -37,7 +37,7 @@ const findAllBattlePassByUser = (req, res) => {
 
 const findBattlePassByPk = (req, res) => {
     
-    BattlePass.findByPk((parseInt(req.params.id)))
+    BattlePass.findByPk((parseInt(req.params.id)),{include: [Comment, User]})
         .then((result) => {
             if (result) {
                 res.json({ message: 'Un Battle Pass a été trouvé.', data: result })
@@ -59,8 +59,9 @@ const createBattlePassWithImg = (req, res) => {
             if (!user) {
                 return res.status(404).json({ message: `L'utilisateur n'a pas été trouvé.` })
             }
+           console.log(req.body, "3")
             const newBattlePass = { ...req.body, userId: user.id, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` }
-
+            console.log(newBattlePass, "2")
             BattlePass.create(newBattlePass)
                 .then((battlepass) => {
                     res.status(201).json({ message: 'Le Battle Pass a bien été créé', data: battlepass })

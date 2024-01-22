@@ -26,12 +26,15 @@ BattlePass.belongsTo(User)
 User.hasMany(Comment)
 Comment.belongsTo(User)
 
+BattlePass.hasMany(Comment)
+Comment.belongsTo(BattlePass)
+
 sequelize.authenticate()
     .then(() => console.log('La connexion à la base de données a bien été établie.'))
     .catch(error => console.error(`Impossible de se connecter à la base de données ${error}`))
 
 
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
     .then(async () => {
         await setRoles(Role)
         await setUsers(User)

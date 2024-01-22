@@ -30,4 +30,7 @@ const setRoles = (Role) => {
     return Promise.all([Role.create({ label: "admin" }), Role.create({ label: "edit" })])
 }
 
+
+
+
 module.exports = {setUsers, setBattlePass, setRoles}

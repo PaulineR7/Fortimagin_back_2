@@ -24,7 +24,8 @@ const login = (req, res) => {
                     }
                     const token = jwt.sign({
                         data: result.pseudo,
-                        dataRole: result.roleId
+                        dataRole: result.roleId,
+                        userId: result.id
                         // id: result.id
                         
                     }, SECRET_KEY, { expiresIn: '10h' });
