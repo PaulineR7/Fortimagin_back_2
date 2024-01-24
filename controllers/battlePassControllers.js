@@ -3,7 +3,7 @@ const { BattlePass, User, sequelize, Comment } = require('../db/sequelizeSetup')
 
 
 const findAllBattlePass= (req, res) => {
-    BattlePass.findAll({include: [User]})
+    BattlePass.findAll({include: [User, Comment]})
         .then((results) => {
             res.json(results)
             console.log(results)
@@ -83,6 +83,7 @@ const updateBattlePassWithImg = (req, res) => {
     BattlePass.findByPk(req.params.id)
         .then((result) => {
             if (result) {
+            console.log(req.body);
                 return result.update({ ...req.body, imageUrl: `${req.protocol}://${req.get('host')}/images/${req.file.filename}` })
                     .then(() => {
                         res.status(201).json({ message: 'Le Battle Pass a bien été mis à jour.', data: result })

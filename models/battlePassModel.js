@@ -1,13 +1,19 @@
 module.exports = (sequelize, DataTypes) => {
-    return sequelize.define('Battle', {
+    return sequelize.define('battles', {
         title: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false,
+            unique: {
+                msg: "Le nom du battle pass est déjà pris"
+            }
         },
         imageUrl: {
-            type: DataTypes.STRING
+            type: DataTypes.STRING,
+            allowNull: false,
         },
         history : {
-            type: DataTypes.TEXT
-        }
+            type: DataTypes.TEXT,
+            allowNull: false,
+        },
     })
 }

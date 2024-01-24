@@ -17,7 +17,6 @@ const findAllComments = (req, res) => {
 // }
 
 const createComment = (req, res) => {
-    console.log(req.body);
     User.findOne({ where: { pseudo: req.pseudo } })
         .then(user => {
             if (!user) {
@@ -34,13 +33,6 @@ const createComment = (req, res) => {
             }
             res.status(500).json({ message: error.message })
         })
-    // const newComment = {...req.body, UserId: req.userId}
-    // Comment.create(newReply)
-    //   .then((reply) => {
-    //      res.status(201).json({message: 'Reply created successfully.', data: reply})
-    //   }).catch((err) => {
-    //      res.status(404).json({message: 'Could not create reply.', data: err.message})
-    //   });
 }
 
 const updateComment = (req, res) => {

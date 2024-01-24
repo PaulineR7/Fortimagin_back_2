@@ -4,9 +4,6 @@ module.exports = (sequelize, DataTypes) => {
             type: DataTypes.STRING,
             allowNull : false   
         },
-        BattleId: {
-            type: DataTypes.INTEGER,
-            allowNull : false 
-        },
+       
     })
 }

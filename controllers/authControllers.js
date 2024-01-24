@@ -1,4 +1,4 @@
-const {User, Role} = require('../db/sequelizeSetup')
+const {User, Role, BattlePass} = require('../db/sequelizeSetup')
 const bcrypt = require('bcrypt')
 const jwt = require('jsonwebtoken')
 const SECRET_KEY = require('../configs/tokenData')
@@ -75,8 +75,44 @@ const restrictToOwnUser = (model) => {
                         if (rolesHierarchy[role.label].includes('admin')) {
                             return next()
                         }
-                        console.log(model)
+                        console.log(model);
                         model.findByPk(req.params.id)
+                            .then(resource => {
+                                if (!resource) return res.status(404).json({ message: `La ressource n'existe pas.` })
+                                if (user.id === resource.userId) {
+                                    next()
+                                } else {
+                                    res.status(403).json({ message: `Vous n'êtes pas l'auteur de la ressource.` })
+                                }
+                            })
+                            .catch(error => {
+                                return res.status(500).json({ message: error.message })
+                            })
+                    })
+            })
+            .catch(error => console.log(error.message))
+    }
+}
+
+const restrictToOwnUserBattlePass = () => {
+    return (req, res, next) => {
+        User.findOne(
+            {
+                where:
+                    { pseudo: req.pseudo }
+            })
+            .then(user => {
+                if (!user) {
+                    return res.status(404).json({ message: `Pas d'utilisateur trouvé.` })
+                }
+                // on teste d'abord si le user est admin
+                return Role.findByPk(user.roleId)
+                    .then(role => {
+                        if (rolesHierarchy[role.label].includes('admin')) {
+                            return next()
+                        }
+                        console.log(BattlePass)
+                        BattlePass.findByPk(req.params.id)
                             .then(resource => {
                                 if (!resource) return res.status(404).json({ message: `La ressource n'existe pas.` })
                                 if (user.id === resource.userId) {
@@ -109,4 +145,4 @@ const correctUser = (req, res, next) => {
         })
 }
 
-module.exports = {login, protect, restrictToOwnUser, correctUser}
+module.exports = {login, protect, restrictToOwnUser, correctUser, restrictToOwnUserBattlePass}

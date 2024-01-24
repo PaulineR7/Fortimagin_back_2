@@ -12,7 +12,7 @@ router
 
 router
     .route('/:id')
-    // .post(protect, createComment)
+    .post(protect, createComment)
     .put(protect, restrictToOwnUser(Comment), updateComment)
     .delete(protect, restrictToOwnUser(Comment), deleteComment)
 
